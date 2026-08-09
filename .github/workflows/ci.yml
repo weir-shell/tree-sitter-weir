@@ -13,14 +13,17 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: checkout weir at the tracked ref
-        uses: actions/checkout@v4
-        with:
-          repository: weir-shell/weir
-          path: weir-ref
-      - name: pin the ref
-        run: cd weir-ref && git fetch --depth 1 origin $(cat ../TRACKED_WEIR_REF) && git checkout $(cat ../TRACKED_WEIR_REF)
+      - uses: actions/checkout@v5
+      - name: fetch weir at the tracked ref (anonymous — weir must be public)
+        # a plain shallow fetch, not actions/checkout: the workflow token
+        # is scoped to THIS repo, so a cross-repo checkout of a private
+        # weir 404s. If this step fails with auth/404, the cause is
+        # weir-shell/weir's visibility, not the ref.
+        run: |
+          git clone --no-checkout --filter=blob:none https://github.com/weir-shell/weir weir-ref
+          cd weir-ref
+          git fetch --depth 1 origin "$(cat ../TRACKED_WEIR_REF)"
+          git checkout FETCH_HEAD
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
