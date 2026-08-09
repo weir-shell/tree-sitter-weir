@@ -1,0 +1,28 @@
+# The split grammar's gates [ts-split in the main repo's DECISIONS]:
+# generate-clean, manifest agreement at the tracked weir ref, and the
+# zero-ERROR corpus bar — the tree-sitter third of the inventory gates
+# that stayed behind when this repo split out.
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: checkout weir at the tracked ref
+        uses: actions/checkout@v4
+        with:
+          repository: weir-shell/weir
+          path: weir-ref
+      - name: pin the ref
+        run: cd weir-ref && git fetch --depth 1 origin $(cat ../TRACKED_WEIR_REF) && git checkout $(cat ../TRACKED_WEIR_REF)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: gates
+        run: ./ci/check.sh weir-ref
