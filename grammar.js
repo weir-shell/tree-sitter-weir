@@ -190,7 +190,9 @@ module.exports = grammar({
         '_',
       ),
 
-    punctuation: _ => choice('(', ')', '[', ']', '{', '}', ';', ',', ':'),
+    // '{|' / '|}' one token each [D:anon-records] — longest-match wins
+    // over '{' + the '|' operator, so the pair never paints as a pipe
+    punctuation: _ => choice('{|', '|}', '(', ')', '[', ']', '{', '}', ';', ',', ':'),
 
     // single-char fallback: command argv holds nearly any character
     // (--flags, paths, globs, ~, ?) — a stray never becomes ERROR
