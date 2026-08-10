@@ -13,7 +13,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: fetch weir at the tracked ref (anonymous — weir must be public)
         # a plain shallow fetch, not actions/checkout: the workflow token
         # is scoped to THIS repo, so a cross-repo checkout of a private
@@ -24,7 +24,7 @@ jobs:
           cd weir-ref
           git fetch --depth 1 origin "$(cat ../TRACKED_WEIR_REF)"
           git checkout FETCH_HEAD
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7
         with:
           node-version: "22"
       - name: gates
