@@ -55,9 +55,11 @@ PY
 errs=0
 allowed=0
 for f in "$WEIR"/examples/*.weir "$WEIR"/tools/*.weir; do
-    # the summary line repeats the first ERROR — count TREE nodes only
-    # (the summary starts with the file path; tree lines are indented)
-    out=$(npx --yes tree-sitter-cli@0.26.12 parse "$f" 2>/dev/null | grep -v "^/" | grep -c "(ERROR" || true)
+    # the summary line repeats the first ERROR — count TREE nodes only.
+    # Match the summary ITSELF (it carries "Parse:" timings), never its
+    # path: the old `grep -v "^/"` only stripped ABSOLUTE paths, so a
+    # relative $WEIR (CI's weir-ref) double-counted every first ERROR
+    out=$(npx --yes tree-sitter-cli@0.26.12 parse "$f" 2>/dev/null | grep -v "Parse:" | grep -c "(ERROR" || true)
     if [ "$out" -gt 0 ]; then
         if [ "$(basename "$f")" = "showcase.weir" ] && [ "$out" -le 1 ]; then
             allowed=$((allowed + out))   # the recorded {{literal braces}} nit
