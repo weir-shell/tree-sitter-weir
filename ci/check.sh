@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # The grammar's own gates [ts-split]: (1) the committed src/ is what
-# grammar.js generates; (2) this grammar agrees with the tracked weir
+# grammar.js generates; (2) this grammar agrees with the targeted weir
 # ref's grammar manifest; (3) that ref's .weir corpus parses with zero
 # ERROR nodes — one recorded exception (README: Known nits).
 # Run from the repo root; expects a weir checkout path as $1.

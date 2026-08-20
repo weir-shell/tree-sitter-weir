@@ -14,11 +14,16 @@ boilerplate across versions but the last regenerations held ABI 14;
 a consumer pinning a rev gets what that rev says) so consumers
 (Helix `--grammar build`, Zed) need no Node.js.
 
-**Tracked weir version**: the ref in [`TRACKED_WEIR_REF`](TRACKED_WEIR_REF).
-CI checks this grammar against that ref's generated
-`editors/grammar-manifest.json` (keywords, `within` kinds, adapter
-names) and parses that ref's `.weir` corpus with the zero-ERROR bar.
-Bumping the ref is the deliberate act of tracking a newer language.
+**Targeted weir version**: the release in
+[`TARGET_WEIR_RELEASE`](TARGET_WEIR_RELEASE) (`main` until weir's first
+release — the checkout then follows weir main as it moves, so drift
+goes red at the next CI run rather than staying green against a pinned
+past). CI first asserts the target IS weir's `releases/latest` (a
+number, so lag is a comparison), then checks this grammar against the
+target's `editors/grammar-manifest.json` — the release ASSET when
+release-targeted — and parses the target's `.weir` corpus with the
+zero-ERROR bar. Bumping the target is the deliberate act of tracking a
+newer weir, and the currency step refuses to let it lag.
 
 This repo split out of the main tree on 2026-08-09 with fresh
 history; the grammar's prior evolution lives in
@@ -43,7 +48,7 @@ Add `grammar = "weir"` (implied by the language name) to the
 
 `tree-sitter generate` (needs the tree-sitter CLI and Node). The
 corpus acceptance: `tree-sitter parse` over every `.weir` in the
-tracked weir ref's `examples/` and `tools/` must produce zero ERROR
+targeted weir version's `examples/` and `tools/` must produce zero ERROR
 nodes (one recorded exception below).
 
 ## Known nits
