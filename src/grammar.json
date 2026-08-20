@@ -269,6 +269,14 @@
         {
           "type": "STRING",
           "value": "env"
+        },
+        {
+          "type": "STRING",
+          "value": "lock"
+        },
+        {
+          "type": "STRING",
+          "value": "proc"
         }
       ]
     },
@@ -374,6 +382,26 @@
         {
           "type": "STRING",
           "value": "until"
+        },
+        {
+          "type": "STRING",
+          "value": "always"
+        },
+        {
+          "type": "STRING",
+          "value": "def"
+        },
+        {
+          "type": "STRING",
+          "value": "return"
+        },
+        {
+          "type": "STRING",
+          "value": "try"
+        },
+        {
+          "type": "STRING",
+          "value": "while"
         }
       ]
     },

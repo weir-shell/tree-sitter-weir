@@ -344,6 +344,10 @@
     "named": true
   },
   {
+    "type": "always",
+    "named": false
+  },
+  {
     "type": "attribute",
     "named": true
   },
@@ -363,6 +367,10 @@
   {
     "type": "constructor",
     "named": true
+  },
+  {
+    "type": "def",
+    "named": false
   },
   {
     "type": "do",
@@ -437,6 +445,10 @@
     "named": false
   },
   {
+    "type": "lock",
+    "named": false
+  },
+  {
     "type": "match",
     "named": false
   },
@@ -461,6 +473,10 @@
     "named": false
   },
   {
+    "type": "proc",
+    "named": false
+  },
+  {
     "type": "raw_string",
     "named": true
   },
@@ -474,6 +490,10 @@
   },
   {
     "type": "retry",
+    "named": false
+  },
+  {
+    "type": "return",
     "named": false
   },
   {
@@ -513,6 +533,10 @@
     "named": false
   },
   {
+    "type": "try",
+    "named": false
+  },
+  {
     "type": "type",
     "named": false
   },
@@ -526,6 +550,10 @@
   },
   {
     "type": "when",
+    "named": false
+  },
+  {
+    "type": "while",
     "named": false
   },
   {
