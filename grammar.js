@@ -13,9 +13,10 @@ module.exports = grammar({
   extras: $ => [/[ \t\r\n]/, $.comment],
 
   // external scanner: `'a` (type param) vs `'echo x'` (command raw string),
-  // plus the yaml district [D:yaml-district] — marker/key/text tokens and
-  // the zero-width `_yaml_end` that carries the district-exit state flip
-  externals: $ => [$.type_param, $.yaml_marker, $.yaml_key, $.yaml_text, $.yaml_for, $.yaml_hole, $._yaml_end],
+  // plus the districts — yaml [D:yaml-district] marker/key/text tokens,
+  // heredoc [D:text-block] marker/text/hole tokens, and the zero-width
+  // `_district_end` that carries the district-exit state flip for both
+  externals: $ => [$.type_param, $.yaml_marker, $.yaml_key, $.yaml_text, $.yaml_for, $.yaml_hole, $.heredoc_marker, $.heredoc_text, $.heredoc_hole, $._district_end],
 
   word: $ => $.identifier,
 
@@ -46,7 +47,10 @@ module.exports = grammar({
         $.yaml_text,
         $.yaml_for,
         $.yaml_hole,
-        $._yaml_end,
+        $.heredoc_marker,
+        $.heredoc_text,
+        $.heredoc_hole,
+        $._district_end,
         $.number,
         $.constructor,
         $.identifier,

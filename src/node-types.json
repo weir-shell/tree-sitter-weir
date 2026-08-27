@@ -96,6 +96,18 @@
           "named": true
         },
         {
+          "type": "heredoc_hole",
+          "named": true
+        },
+        {
+          "type": "heredoc_marker",
+          "named": true
+        },
+        {
+          "type": "heredoc_text",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -410,6 +422,18 @@
   },
   {
     "type": "hash_line",
+    "named": true
+  },
+  {
+    "type": "heredoc_hole",
+    "named": true
+  },
+  {
+    "type": "heredoc_marker",
+    "named": true
+  },
+  {
+    "type": "heredoc_text",
     "named": true
   },
   {

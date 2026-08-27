@@ -48,6 +48,22 @@ want_kw = sorted(set(m["keywords"]) - {"true", "false"})
 missing = [k for k in want_kw if k not in kw]
 if missing:
     print(f"FAIL: keywords missing from the grammar: {missing}"); sys.exit(1)
+
+# blockHeads [text-block in the main repo's DECISIONS]: district markers
+# live in the SCANNER (they are lexed, not parsed), so agreement is
+# presence in scanner.c. Tolerant of absence: the field arrives with the
+# release that ships the heredoc block — a pre-blockHeads target must
+# still gate clean.
+bh = m.get("blockHeads")
+if bh is None:
+    print("ok: manifest has no blockHeads field (pre-heredoc target) — marker check skipped")
+else:
+    sc = open("src/scanner.c").read()
+    absent = [h for h in bh if h not in sc]
+    if absent:
+        print(f"FAIL: blockHeads missing from scanner.c: {absent}"); sys.exit(1)
+    print(f"ok: blockHeads {bh} present in the scanner")
+
 print(f"ok: manifest agreement ({len(want_kw)} keywords, {wk} kinds, {want} adapters)")
 PY
 

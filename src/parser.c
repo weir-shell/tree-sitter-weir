@@ -9,10 +9,10 @@
 #define LANGUAGE_VERSION 14
 #define STATE_COUNT 21
 #define LARGE_STATE_COUNT 17
-#define SYMBOL_COUNT 112
+#define SYMBOL_COUNT 115
 #define ALIAS_COUNT 0
-#define TOKEN_COUNT 99
-#define EXTERNAL_TOKEN_COUNT 7
+#define TOKEN_COUNT 102
+#define EXTERNAL_TOKEN_COUNT 10
 #define FIELD_COUNT 2
 #define MAX_ALIAS_SEQUENCE_LENGTH 3
 #define MAX_RESERVED_WORD_SET_SIZE 0
@@ -117,20 +117,23 @@ enum ts_symbol_identifiers {
   sym_yaml_text = 95,
   sym_yaml_for = 96,
   sym_yaml_hole = 97,
-  sym__yaml_end = 98,
-  sym_source_file = 99,
-  sym__item = 100,
-  sym_let_head = 101,
-  sym_type_head = 102,
-  sym_within_head = 103,
-  sym_within_kind = 104,
-  sym_keyword = 105,
-  sym_boolean = 106,
-  sym_interp_string = 107,
-  sym_operator = 108,
-  sym_punctuation = 109,
-  aux_sym_source_file_repeat1 = 110,
-  aux_sym_interp_string_repeat1 = 111,
+  sym_heredoc_marker = 98,
+  sym_heredoc_text = 99,
+  sym_heredoc_hole = 100,
+  sym__district_end = 101,
+  sym_source_file = 102,
+  sym__item = 103,
+  sym_let_head = 104,
+  sym_type_head = 105,
+  sym_within_head = 106,
+  sym_within_kind = 107,
+  sym_keyword = 108,
+  sym_boolean = 109,
+  sym_interp_string = 110,
+  sym_operator = 111,
+  sym_punctuation = 112,
+  aux_sym_source_file_repeat1 = 113,
+  aux_sym_interp_string_repeat1 = 114,
 };
 
 static const char * const ts_symbol_names[] = {
@@ -232,7 +235,10 @@ static const char * const ts_symbol_names[] = {
   [sym_yaml_text] = "yaml_text",
   [sym_yaml_for] = "yaml_for",
   [sym_yaml_hole] = "yaml_hole",
-  [sym__yaml_end] = "_yaml_end",
+  [sym_heredoc_marker] = "heredoc_marker",
+  [sym_heredoc_text] = "heredoc_text",
+  [sym_heredoc_hole] = "heredoc_hole",
+  [sym__district_end] = "_district_end",
   [sym_source_file] = "source_file",
   [sym__item] = "_item",
   [sym_let_head] = "let_head",
@@ -347,7 +353,10 @@ static const TSSymbol ts_symbol_map[] = {
   [sym_yaml_text] = sym_yaml_text,
   [sym_yaml_for] = sym_yaml_for,
   [sym_yaml_hole] = sym_yaml_hole,
-  [sym__yaml_end] = sym__yaml_end,
+  [sym_heredoc_marker] = sym_heredoc_marker,
+  [sym_heredoc_text] = sym_heredoc_text,
+  [sym_heredoc_hole] = sym_heredoc_hole,
+  [sym__district_end] = sym__district_end,
   [sym_source_file] = sym_source_file,
   [sym__item] = sym__item,
   [sym_let_head] = sym_let_head,
@@ -756,7 +765,19 @@ static const TSSymbolMetadata ts_symbol_metadata[] = {
     .visible = true,
     .named = true,
   },
-  [sym__yaml_end] = {
+  [sym_heredoc_marker] = {
+    .visible = true,
+    .named = true,
+  },
+  [sym_heredoc_text] = {
+    .visible = true,
+    .named = true,
+  },
+  [sym_heredoc_hole] = {
+    .visible = true,
+    .named = true,
+  },
+  [sym__district_end] = {
     .visible = false,
     .named = true,
   },
@@ -1949,7 +1970,10 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_yaml_text] = ACTIONS(1),
     [sym_yaml_for] = ACTIONS(1),
     [sym_yaml_hole] = ACTIONS(1),
-    [sym__yaml_end] = ACTIONS(1),
+    [sym_heredoc_marker] = ACTIONS(1),
+    [sym_heredoc_text] = ACTIONS(1),
+    [sym_heredoc_hole] = ACTIONS(1),
+    [sym__district_end] = ACTIONS(1),
   },
   [STATE(1)] = {
     [sym_source_file] = STATE(20),
@@ -2052,7 +2076,10 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_yaml_text] = ACTIONS(9),
     [sym_yaml_for] = ACTIONS(9),
     [sym_yaml_hole] = ACTIONS(9),
-    [sym__yaml_end] = ACTIONS(9),
+    [sym_heredoc_marker] = ACTIONS(9),
+    [sym_heredoc_text] = ACTIONS(9),
+    [sym_heredoc_hole] = ACTIONS(9),
+    [sym__district_end] = ACTIONS(9),
   },
   [STATE(2)] = {
     [sym__item] = STATE(2),
@@ -2154,7 +2181,10 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_yaml_text] = ACTIONS(36),
     [sym_yaml_for] = ACTIONS(36),
     [sym_yaml_hole] = ACTIONS(36),
-    [sym__yaml_end] = ACTIONS(36),
+    [sym_heredoc_marker] = ACTIONS(36),
+    [sym_heredoc_text] = ACTIONS(36),
+    [sym_heredoc_hole] = ACTIONS(36),
+    [sym__district_end] = ACTIONS(36),
   },
   [STATE(3)] = {
     [sym__item] = STATE(2),
@@ -2256,7 +2286,10 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_yaml_text] = ACTIONS(73),
     [sym_yaml_for] = ACTIONS(73),
     [sym_yaml_hole] = ACTIONS(73),
-    [sym__yaml_end] = ACTIONS(73),
+    [sym_heredoc_marker] = ACTIONS(73),
+    [sym_heredoc_text] = ACTIONS(73),
+    [sym_heredoc_hole] = ACTIONS(73),
+    [sym__district_end] = ACTIONS(73),
   },
   [STATE(4)] = {
     [sym_within_kind] = STATE(14),
@@ -2354,7 +2387,10 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_yaml_text] = ACTIONS(75),
     [sym_yaml_for] = ACTIONS(75),
     [sym_yaml_hole] = ACTIONS(75),
-    [sym__yaml_end] = ACTIONS(75),
+    [sym_heredoc_marker] = ACTIONS(75),
+    [sym_heredoc_text] = ACTIONS(75),
+    [sym_heredoc_hole] = ACTIONS(75),
+    [sym__district_end] = ACTIONS(75),
   },
   [STATE(5)] = {
     [ts_builtin_sym_end] = ACTIONS(81),
@@ -2446,7 +2482,10 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_yaml_text] = ACTIONS(81),
     [sym_yaml_for] = ACTIONS(81),
     [sym_yaml_hole] = ACTIONS(81),
-    [sym__yaml_end] = ACTIONS(81),
+    [sym_heredoc_marker] = ACTIONS(81),
+    [sym_heredoc_text] = ACTIONS(81),
+    [sym_heredoc_hole] = ACTIONS(81),
+    [sym__district_end] = ACTIONS(81),
   },
   [STATE(6)] = {
     [ts_builtin_sym_end] = ACTIONS(75),
@@ -2538,7 +2577,10 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_yaml_text] = ACTIONS(75),
     [sym_yaml_for] = ACTIONS(75),
     [sym_yaml_hole] = ACTIONS(75),
-    [sym__yaml_end] = ACTIONS(75),
+    [sym_heredoc_marker] = ACTIONS(75),
+    [sym_heredoc_text] = ACTIONS(75),
+    [sym_heredoc_hole] = ACTIONS(75),
+    [sym__district_end] = ACTIONS(75),
   },
   [STATE(7)] = {
     [ts_builtin_sym_end] = ACTIONS(75),
@@ -2630,7 +2672,10 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_yaml_text] = ACTIONS(75),
     [sym_yaml_for] = ACTIONS(75),
     [sym_yaml_hole] = ACTIONS(75),
-    [sym__yaml_end] = ACTIONS(75),
+    [sym_heredoc_marker] = ACTIONS(75),
+    [sym_heredoc_text] = ACTIONS(75),
+    [sym_heredoc_hole] = ACTIONS(75),
+    [sym__district_end] = ACTIONS(75),
   },
   [STATE(8)] = {
     [ts_builtin_sym_end] = ACTIONS(75),
@@ -2722,7 +2767,10 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_yaml_text] = ACTIONS(75),
     [sym_yaml_for] = ACTIONS(75),
     [sym_yaml_hole] = ACTIONS(75),
-    [sym__yaml_end] = ACTIONS(75),
+    [sym_heredoc_marker] = ACTIONS(75),
+    [sym_heredoc_text] = ACTIONS(75),
+    [sym_heredoc_hole] = ACTIONS(75),
+    [sym__district_end] = ACTIONS(75),
   },
   [STATE(9)] = {
     [ts_builtin_sym_end] = ACTIONS(89),
@@ -2814,7 +2862,10 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_yaml_text] = ACTIONS(89),
     [sym_yaml_for] = ACTIONS(89),
     [sym_yaml_hole] = ACTIONS(89),
-    [sym__yaml_end] = ACTIONS(89),
+    [sym_heredoc_marker] = ACTIONS(89),
+    [sym_heredoc_text] = ACTIONS(89),
+    [sym_heredoc_hole] = ACTIONS(89),
+    [sym__district_end] = ACTIONS(89),
   },
   [STATE(10)] = {
     [ts_builtin_sym_end] = ACTIONS(93),
@@ -2906,7 +2957,10 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_yaml_text] = ACTIONS(93),
     [sym_yaml_for] = ACTIONS(93),
     [sym_yaml_hole] = ACTIONS(93),
-    [sym__yaml_end] = ACTIONS(93),
+    [sym_heredoc_marker] = ACTIONS(93),
+    [sym_heredoc_text] = ACTIONS(93),
+    [sym_heredoc_hole] = ACTIONS(93),
+    [sym__district_end] = ACTIONS(93),
   },
   [STATE(11)] = {
     [ts_builtin_sym_end] = ACTIONS(97),
@@ -2998,7 +3052,10 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_yaml_text] = ACTIONS(97),
     [sym_yaml_for] = ACTIONS(97),
     [sym_yaml_hole] = ACTIONS(97),
-    [sym__yaml_end] = ACTIONS(97),
+    [sym_heredoc_marker] = ACTIONS(97),
+    [sym_heredoc_text] = ACTIONS(97),
+    [sym_heredoc_hole] = ACTIONS(97),
+    [sym__district_end] = ACTIONS(97),
   },
   [STATE(12)] = {
     [ts_builtin_sym_end] = ACTIONS(101),
@@ -3090,7 +3147,10 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_yaml_text] = ACTIONS(101),
     [sym_yaml_for] = ACTIONS(101),
     [sym_yaml_hole] = ACTIONS(101),
-    [sym__yaml_end] = ACTIONS(101),
+    [sym_heredoc_marker] = ACTIONS(101),
+    [sym_heredoc_text] = ACTIONS(101),
+    [sym_heredoc_hole] = ACTIONS(101),
+    [sym__district_end] = ACTIONS(101),
   },
   [STATE(13)] = {
     [ts_builtin_sym_end] = ACTIONS(105),
@@ -3182,7 +3242,10 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_yaml_text] = ACTIONS(105),
     [sym_yaml_for] = ACTIONS(105),
     [sym_yaml_hole] = ACTIONS(105),
-    [sym__yaml_end] = ACTIONS(105),
+    [sym_heredoc_marker] = ACTIONS(105),
+    [sym_heredoc_text] = ACTIONS(105),
+    [sym_heredoc_hole] = ACTIONS(105),
+    [sym__district_end] = ACTIONS(105),
   },
   [STATE(14)] = {
     [ts_builtin_sym_end] = ACTIONS(109),
@@ -3274,7 +3337,10 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_yaml_text] = ACTIONS(109),
     [sym_yaml_for] = ACTIONS(109),
     [sym_yaml_hole] = ACTIONS(109),
-    [sym__yaml_end] = ACTIONS(109),
+    [sym_heredoc_marker] = ACTIONS(109),
+    [sym_heredoc_text] = ACTIONS(109),
+    [sym_heredoc_hole] = ACTIONS(109),
+    [sym__district_end] = ACTIONS(109),
   },
   [STATE(15)] = {
     [ts_builtin_sym_end] = ACTIONS(113),
@@ -3366,7 +3432,10 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_yaml_text] = ACTIONS(113),
     [sym_yaml_for] = ACTIONS(113),
     [sym_yaml_hole] = ACTIONS(113),
-    [sym__yaml_end] = ACTIONS(113),
+    [sym_heredoc_marker] = ACTIONS(113),
+    [sym_heredoc_text] = ACTIONS(113),
+    [sym_heredoc_hole] = ACTIONS(113),
+    [sym__district_end] = ACTIONS(113),
   },
   [STATE(16)] = {
     [ts_builtin_sym_end] = ACTIONS(117),
@@ -3458,7 +3527,10 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_yaml_text] = ACTIONS(117),
     [sym_yaml_for] = ACTIONS(117),
     [sym_yaml_hole] = ACTIONS(117),
-    [sym__yaml_end] = ACTIONS(117),
+    [sym_heredoc_marker] = ACTIONS(117),
+    [sym_heredoc_text] = ACTIONS(117),
+    [sym_heredoc_hole] = ACTIONS(117),
+    [sym__district_end] = ACTIONS(117),
   },
 };
 
@@ -3589,7 +3661,10 @@ enum ts_external_scanner_symbol_identifiers {
   ts_external_token_yaml_text = 3,
   ts_external_token_yaml_for = 4,
   ts_external_token_yaml_hole = 5,
-  ts_external_token__yaml_end = 6,
+  ts_external_token_heredoc_marker = 6,
+  ts_external_token_heredoc_text = 7,
+  ts_external_token_heredoc_hole = 8,
+  ts_external_token__district_end = 9,
 };
 
 static const TSSymbol ts_external_scanner_symbol_map[EXTERNAL_TOKEN_COUNT] = {
@@ -3599,7 +3674,10 @@ static const TSSymbol ts_external_scanner_symbol_map[EXTERNAL_TOKEN_COUNT] = {
   [ts_external_token_yaml_text] = sym_yaml_text,
   [ts_external_token_yaml_for] = sym_yaml_for,
   [ts_external_token_yaml_hole] = sym_yaml_hole,
-  [ts_external_token__yaml_end] = sym__yaml_end,
+  [ts_external_token_heredoc_marker] = sym_heredoc_marker,
+  [ts_external_token_heredoc_text] = sym_heredoc_text,
+  [ts_external_token_heredoc_hole] = sym_heredoc_hole,
+  [ts_external_token__district_end] = sym__district_end,
 };
 
 static const bool ts_external_scanner_states[2][EXTERNAL_TOKEN_COUNT] = {
@@ -3610,7 +3688,10 @@ static const bool ts_external_scanner_states[2][EXTERNAL_TOKEN_COUNT] = {
     [ts_external_token_yaml_text] = true,
     [ts_external_token_yaml_for] = true,
     [ts_external_token_yaml_hole] = true,
-    [ts_external_token__yaml_end] = true,
+    [ts_external_token_heredoc_marker] = true,
+    [ts_external_token_heredoc_text] = true,
+    [ts_external_token_heredoc_hole] = true,
+    [ts_external_token__district_end] = true,
   },
 };
 

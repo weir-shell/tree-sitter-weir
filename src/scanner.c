@@ -27,14 +27,26 @@
 //    consulted at the `yaml` position inside it. Remaining over-accepts
 //    (a value named `yaml` at line end with an indented next line) are
 //    the renderer charter.
+//
+// 3. The heredoc district [D:text-block] — a line-end `<<<` / `$<<<`
+//    marker followed by an indented block of literal lines. Body lines
+//    are BYTES (one heredoc_text token each); on `$<<<` lines a `{expr}`
+//    hole is ONE token (the interp_hole convention — no interior
+//    highlighting) and `{{`/`}}` ride as text. The exit is the shared
+//    zero-width `_district_end`. A GLYPH marker: nothing legal ends a
+//    line in `<<<`, so there is no adapter-style exclusion to make.
 
-enum TokenType { TYPE_PARAM, YAML_MARKER, YAML_KEY, YAML_TEXT, YAML_FOR, YAML_HOLE, YAML_END };
+enum TokenType { TYPE_PARAM, YAML_MARKER, YAML_KEY, YAML_TEXT, YAML_FOR, YAML_HOLE, HEREDOC_MARKER, HEREDOC_TEXT, HEREDOC_HOLE, DISTRICT_END };
 
 // line modes inside a district
 enum { MODE_KEY, MODE_VALUE, MODE_WEIR };
 
+// which district the state machine is inside
+enum { KIND_YAML, KIND_HEREDOC, KIND_HEREDOC_INTERP };
+
 typedef struct {
   char in_district;
+  char kind;       // KIND_*: which marker armed the district
   char base;       // indent of the first block line; a shallower line exits
   char mode;       // MODE_*: what the rest of the current line lexes as
   char in_block;   // inside a block scalar's content [D:block-scalars]
@@ -55,6 +67,7 @@ static inline bool is_nl(int32_t c) { return c == '\n' || c == '\r'; }
 void *tree_sitter_weir_external_scanner_create(void) {
   State *s = (State *)ts_malloc(sizeof(State));
   s->in_district = 0;
+  s->kind = KIND_YAML;
   s->base = 0;
   s->mode = MODE_KEY;
   s->in_block = 0;
@@ -65,22 +78,25 @@ void tree_sitter_weir_external_scanner_destroy(void *payload) { ts_free(payload)
 unsigned tree_sitter_weir_external_scanner_serialize(void *payload, char *buffer) {
   State *s = payload;
   buffer[0] = s->in_district;
-  buffer[1] = s->base;
-  buffer[2] = s->mode;
-  buffer[3] = s->in_block;
-  buffer[4] = s->block_base;
-  return 5;
+  buffer[1] = s->kind;
+  buffer[2] = s->base;
+  buffer[3] = s->mode;
+  buffer[4] = s->in_block;
+  buffer[5] = s->block_base;
+  return 6;
 }
 void tree_sitter_weir_external_scanner_deserialize(void *payload, const char *buffer, unsigned length) {
   State *s = payload;
-  if (length == 5) {
+  if (length == 6) {
     s->in_district = buffer[0];
-    s->base = buffer[1];
-    s->mode = buffer[2];
-    s->in_block = buffer[3];
-    s->block_base = buffer[4];
+    s->kind = buffer[1];
+    s->base = buffer[2];
+    s->mode = buffer[3];
+    s->in_block = buffer[4];
+    s->block_base = buffer[5];
   } else {
     s->in_district = 0;
+    s->kind = KIND_YAML;
     s->base = 0;
     s->mode = MODE_KEY;
     s->in_block = 0;
@@ -164,9 +180,96 @@ static bool scan_yaml_marker(State *s, TSLexer *lexer) {
   if (col == 0) return false;                   // dedented: no block
 
   s->in_district = 1;
+  s->kind = KIND_YAML;
   s->base = (char)(col > 127 ? 127 : col);
   s->mode = MODE_KEY;
   lexer->result_symbol = YAML_MARKER;
+  return true;
+}
+
+// ---- heredoc district [D:text-block] ----------------------------------
+
+// at `<` or `$`: a marker iff `<<<` (optionally $-prefixed) ends its
+// line and the next non-blank line is indented — the yaml peek, glyph'd
+static bool scan_heredoc_marker(State *s, TSLexer *lexer) {
+  bool interp = false;
+  if (lexer->lookahead == '$') {
+    interp = true;
+    lexer->advance(lexer, false);
+  }
+  for (int i = 0; i < 3; i++) {
+    if (lexer->lookahead != '<') return false;
+    lexer->advance(lexer, false);
+  }
+  if (lexer->lookahead == '<') return false;  // <<<< is nothing
+  lexer->mark_end(lexer);                     // token = <<< or $<<<
+
+  while (is_line_ws(lexer->lookahead)) lexer->advance(lexer, false);
+  if (!is_nl(lexer->lookahead)) return false; // not at line end
+
+  // skip blank lines; the first non-blank line's indent is the base
+  for (;;) {
+    int32_t c = lexer->lookahead;
+    if (c == 0 && lexer->eof(lexer)) return false;
+    if (is_nl(c) || is_line_ws(c)) { lexer->advance(lexer, false); continue; }
+    break;
+  }
+  unsigned col = lexer->get_column(lexer);
+  if (col == 0) return false;                 // dedented: no block
+
+  s->in_district = 1;
+  s->kind = interp ? KIND_HEREDOC_INTERP : KIND_HEREDOC;
+  s->base = (char)(col > 127 ? 127 : col);
+  s->mode = MODE_KEY;
+  lexer->result_symbol = HEREDOC_MARKER;
+  return true;
+}
+
+// a heredoc body line: bytes to the line end; on $<<< lines a single
+// `{` opens a whole-`{expr}` hole token (strings opaque, the
+// interp_hole convention) and `{{` rides as text
+static bool scan_heredoc_line(State *s, TSLexer *lexer) {
+  bool interp = s->kind == KIND_HEREDOC_INTERP;
+  bool consumed = false;
+  for (;;) {
+    int32_t k = lexer->lookahead;
+    if (is_nl(k) || (k == 0 && lexer->eof(lexer))) break;
+    if (interp && k == '{') {
+      lexer->mark_end(lexer);                 // pending text stops before the brace
+      lexer->advance(lexer, false);
+      if (lexer->lookahead == '{') {          // {{ literal — rides as text
+        lexer->advance(lexer, false);
+        consumed = true;
+        continue;
+      }
+      if (consumed) {                          // emit the text before the hole
+        lexer->result_symbol = HEREDOC_TEXT;
+        return true;
+      }
+      for (;;) {                               // the hole, one token to its }
+        int32_t h = lexer->lookahead;
+        if (is_nl(h) || (h == 0 && lexer->eof(lexer))) break; // unclosed: to line end
+        if (h == '"') {                        // quoted strings are opaque
+          lexer->advance(lexer, false);
+          while (!(lexer->lookahead == '"' || is_nl(lexer->lookahead) ||
+                   (lexer->lookahead == 0 && lexer->eof(lexer))))
+            lexer->advance(lexer, false);
+          if (lexer->lookahead == '"') lexer->advance(lexer, false);
+          continue;
+        }
+        lexer->advance(lexer, false);
+        if (h == '}') break;
+      }
+      lexer->mark_end(lexer);
+      lexer->result_symbol = HEREDOC_HOLE;
+      return true;
+    }
+    lexer->advance(lexer, false);
+    consumed = true;
+  }
+  if (!consumed) return false;
+  lexer->mark_end(lexer);
+  lexer->result_symbol = HEREDOC_TEXT;
   return true;
 }
 
@@ -184,9 +287,13 @@ static bool scan_district(State *s, TSLexer *lexer) {
     // the district is over: a zero-width exit token carries the state flip
     s->in_district = 0;
     lexer->mark_end(lexer);
-    lexer->result_symbol = YAML_END;
+    lexer->result_symbol = DISTRICT_END;
     return true;
   }
+  // a heredoc body: every line is bytes (plus holes on $<<< lines) —
+  // none of the yaml key/value/block machinery below applies
+  if (s->kind != KIND_YAML) return scan_heredoc_line(s, lexer);
+
   // block scalar content [D:block-scalars]: every line is BYTES — one
   // text token, no splice/for/key scanning; a dedent ends the block
   if (s->in_block) {
@@ -354,7 +461,8 @@ bool tree_sitter_weir_external_scanner_scan(void *payload, TSLexer *lexer,
                                             const bool *valid_symbols) {
   State *s = payload;
 
-  if (s->in_district && valid_symbols[YAML_TEXT]) return scan_district(s, lexer);
+  if (s->in_district && (valid_symbols[YAML_TEXT] || valid_symbols[HEREDOC_TEXT]))
+    return scan_district(s, lexer);
 
   // outside a district: skip whitespace, then dispatch on the first char
   while (is_line_ws(lexer->lookahead) || is_nl(lexer->lookahead)) {
@@ -364,5 +472,7 @@ bool tree_sitter_weir_external_scanner_scan(void *payload, TSLexer *lexer,
     return scan_type_param(lexer);
   if (lexer->lookahead == 'y' && valid_symbols[YAML_MARKER])
     return scan_yaml_marker(s, lexer);
+  if ((lexer->lookahead == '<' || lexer->lookahead == '$') && valid_symbols[HEREDOC_MARKER])
+    return scan_heredoc_marker(s, lexer);
   return false;
 }

@@ -103,7 +103,19 @@
         },
         {
           "type": "SYMBOL",
-          "name": "_yaml_end"
+          "name": "heredoc_marker"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "heredoc_text"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "heredoc_hole"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_district_end"
         },
         {
           "type": "SYMBOL",
@@ -933,7 +945,19 @@
     },
     {
       "type": "SYMBOL",
-      "name": "_yaml_end"
+      "name": "heredoc_marker"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "heredoc_text"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "heredoc_hole"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_district_end"
     }
   ],
   "inline": [],
