@@ -164,7 +164,11 @@ module.exports = grammar({
     // `to`/`from` boundary means the external scanner is never consulted at
     // the `yaml` position, so an adapter can never open a district
     // [D:yaml-district].
-    adapter: _ => token(prec(3, seq(choice('to', 'from'), /[ \t]+/, choice('jsonl', 'json', 'yaml')))),
+    // the optional `stream` modifier rides the token [D:wire-unions]:
+    // `from yaml stream` / `to yaml stream` colour whole, mirroring the
+    // tmLanguage/micro adapter rule (over-colouring `from json stream`
+    // is harmless — the checker rejects that spelling)
+    adapter: _ => token(prec(3, seq(choice('to', 'from'), /[ \t]+/, choice('jsonl', 'json', 'yaml'), optional(seq(/[ \t]+/, 'stream'))))),
 
     number: _ => token(/\d+/),
 
