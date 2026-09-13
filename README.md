@@ -9,7 +9,8 @@ freely, does not replicate the assembler's logical-line
 reconstruction (a continuation line may highlight as a fresh
 statement), and must never be cited as the language definition.
 
-Generated `src/` is committed (**ABI 14** — the CLI churns generated
+Generated `src/` is committed (**ABI 14**, pinned explicitly via
+`generate --abi 14` in ci/check.sh — the CLI churns generated
 boilerplate across versions but the last regenerations held ABI 14;
 a consumer pinning a rev gets what that rev says) so consumers
 (Helix `--grammar build`, Zed) need no Node.js.

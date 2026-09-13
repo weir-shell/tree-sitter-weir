@@ -8,7 +8,9 @@ set -euo pipefail
 WEIR="${1:?usage: ci/check.sh <path-to-weir-checkout>}"
 
 # 1 — generate must be a no-op against the committed src/
-npx --yes tree-sitter-cli@0.26.12 generate
+# --abi 14 EXPLICIT: the README's ABI pin, stated to the CLI (without
+# it, the missing-tree-sitter.json warning fires and the pin is implicit)
+npx --yes tree-sitter-cli@0.26.12 generate --abi 14
 if ! git diff --quiet -- src; then
     echo "FAIL: committed src/ differs from what grammar.js generates" >&2
     git diff --stat -- src >&2
