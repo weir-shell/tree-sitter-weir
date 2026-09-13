@@ -115,6 +115,9 @@ module.exports = grammar({
         'return',
         'try',
         'while',
+        // the pure region head [D:pure-stage1] — a standalone kind,
+        // never `within pure`, so it rides keywords not within_kind
+        'pure',
       ),
 
     boolean: _ => choice('true', 'false'),
@@ -168,7 +171,7 @@ module.exports = grammar({
     // `from yaml stream` / `to yaml stream` colour whole, mirroring the
     // tmLanguage/micro adapter rule (over-colouring `from json stream`
     // is harmless — the checker rejects that spelling)
-    adapter: _ => token(prec(3, seq(choice('to', 'from'), /[ \t]+/, choice('jsonl', 'json', 'yaml'), optional(seq(/[ \t]+/, 'stream'))))),
+    adapter: _ => token(prec(3, seq(choice('to', 'from'), /[ \t]+/, choice('jsonl', 'json', 'yaml', 'xml'), optional(seq(/[ \t]+/, 'stream'))))),
 
     number: _ => token(/\d+/),
 

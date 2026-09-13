@@ -501,6 +501,10 @@
     "named": false
   },
   {
+    "type": "pure",
+    "named": false
+  },
+  {
     "type": "raw_string",
     "named": true
   },

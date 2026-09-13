@@ -414,6 +414,10 @@
         {
           "type": "STRING",
           "value": "while"
+        },
+        {
+          "type": "STRING",
+          "value": "pure"
         }
       ]
     },
@@ -720,6 +724,10 @@
                 {
                   "type": "STRING",
                   "value": "yaml"
+                },
+                {
+                  "type": "STRING",
+                  "value": "xml"
                 }
               ]
             },
