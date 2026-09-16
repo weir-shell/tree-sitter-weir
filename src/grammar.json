@@ -418,6 +418,14 @@
         {
           "type": "STRING",
           "value": "pure"
+        },
+        {
+          "type": "STRING",
+          "value": "readonly"
+        },
+        {
+          "type": "STRING",
+          "value": "plan"
         }
       ]
     },

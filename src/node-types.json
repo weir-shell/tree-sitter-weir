@@ -493,6 +493,10 @@
     "named": false
   },
   {
+    "type": "plan",
+    "named": false
+  },
+  {
     "type": "poll",
     "named": false
   },
@@ -511,6 +515,10 @@
   {
     "type": "raw_verbatim",
     "named": true
+  },
+  {
+    "type": "readonly",
+    "named": false
   },
   {
     "type": "rec",
