@@ -118,9 +118,10 @@ module.exports = grammar({
         // the pure region head [D:pure-stage1] — a standalone kind,
         // never `within pure`, so it rides keywords not within_kind
         'pure',
-        // readonly (no external mutation, ambient reads ok) and plan
-        // (capture mutations as data) — standalone heads like pure,
-        // never `within readonly`/`within plan` [D:pure-stage2][D:plan-apply]
+        // readonly and plan — standalone block heads like pure, never
+        // `within readonly`/`within plan` [D:pure-stage2][D:plan-apply].
+        // NB: no parens in this comment — the currency extractor reads
+        // choice up to the first close-paren.
         'readonly',
         'plan',
       ),
