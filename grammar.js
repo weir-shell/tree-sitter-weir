@@ -177,7 +177,7 @@ module.exports = grammar({
     // `from yaml stream` / `to yaml stream` colour whole, mirroring the
     // tmLanguage/micro adapter rule (over-colouring `from json stream`
     // is harmless — the checker rejects that spelling)
-    adapter: _ => token(prec(3, seq(choice('to', 'from'), /[ \t]+/, choice('jsonl', 'json', 'yaml', 'xml'), optional(seq(/[ \t]+/, 'stream'))))),
+    adapter: _ => token(prec(3, seq(choice('to', 'from'), /[ \t]+/, choice('jsonl', 'json', 'table', 'yaml', 'xml'), optional(seq(/[ \t]+/, 'stream'))))),
 
     number: _ => token(/\d+/),
 
