@@ -533,6 +533,10 @@
     "named": false
   },
   {
+    "type": "serve",
+    "named": false
+  },
+  {
     "type": "sigil",
     "named": true
   },

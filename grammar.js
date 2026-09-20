@@ -81,7 +81,7 @@ module.exports = grammar({
     // precedence over the bare `within` keyword fallback
     within_head: $ => prec.right(2, seq('within', field('kind', $.within_kind))),
 
-    within_kind: _ => choice('tmp', 'cd', 'env', 'lock', 'proc'),
+    within_kind: _ => choice('tmp', 'cd', 'env', 'lock', 'proc', 'serve'),
 
     keyword: _ =>
       choice(
