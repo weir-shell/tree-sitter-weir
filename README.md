@@ -50,14 +50,12 @@ Add `grammar = "weir"` (implied by the language name) to the
 `tree-sitter generate` (needs the tree-sitter CLI and Node). The
 corpus acceptance: `tree-sitter parse` over every `.weir` in the
 targeted weir version's `examples/` and `tools/` must produce zero ERROR
-nodes (one recorded exception below).
+nodes.
 
 ## Known nits
 
-- `$"... {{literal braces}} ..."` — the interp rules mis-lex a
-  `{{`-escape adjacent to a closing quote (ONE ERROR node,
-  examples/showcase.weir, present since before the block-scalars
-  session; verified pre-existing). The corpus-acceptance rule
-  tolerates exactly this one until a coloring session takes it; the
-  fix likely lives in the `interp_text`/`interp_escape` token
-  ordering.
+- None. (The `$"... {{literal braces}} ..."` mis-lex — an interp hole's
+  `{` opener greedily eating a `{{ … }}` literal-brace run — is fixed:
+  `interp_hole` now refuses a leading `{`, so `{{`/`}}` stay escapes.
+  This closed the recorded showcase.weir exception and unblocked
+  tools/multi-repro.weir's JSON-in-`$"…"` lockfile lines.)

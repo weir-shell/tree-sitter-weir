@@ -69,9 +69,8 @@ else:
 print(f"ok: manifest agreement ({len(want_kw)} keywords, {wk} kinds, {want} adapters)")
 PY
 
-# 3 — the corpus, zero ERROR nodes (one recorded exception)
+# 3 — the corpus, zero ERROR nodes
 errs=0
-allowed=0
 for f in "$WEIR"/examples/*.weir "$WEIR"/tools/*.weir; do
     # the summary line repeats the first ERROR — count TREE nodes only.
     # Match the summary ITSELF (it carries "Parse:" timings), never its
@@ -79,13 +78,9 @@ for f in "$WEIR"/examples/*.weir "$WEIR"/tools/*.weir; do
     # relative $WEIR (CI's weir-ref) double-counted every first ERROR
     out=$(npx --yes tree-sitter-cli@0.26.12 parse "$f" 2>/dev/null | grep -v "Parse:" | grep -c "(ERROR" || true)
     if [ "$out" -gt 0 ]; then
-        if [ "$(basename "$f")" = "showcase.weir" ] && [ "$out" -le 1 ]; then
-            allowed=$((allowed + out))   # the recorded {{literal braces}} nit
-        else
-            echo "ERROR nodes in $f: $out" >&2
-            errs=$((errs + out))
-        fi
+        echo "ERROR nodes in $f: $out" >&2
+        errs=$((errs + out))
     fi
 done
 [ "$errs" -eq 0 ] || { echo "FAIL: corpus has $errs unrecorded ERROR nodes" >&2; exit 1; }
-echo "ok: corpus parses clean ($allowed recorded-nit node(s) tolerated)"
+echo "ok: corpus parses clean (zero ERROR nodes)"
