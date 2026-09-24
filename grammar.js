@@ -150,9 +150,22 @@ module.exports = grammar({
 
     interp_text: _ => token.immediate(prec(1, /[^"{}\\]+/)),
     interp_escape: _ => token.immediate(choice('{{', '}}', /\\./)),
-    // holes hold expressions, quoted strings included
+    // holes hold expressions, quoted strings included. The FIRST hole
+    // atom must not be `{`: `{{` is the literal-brace escape (interp_escape
+    // above), and without this guard the hole's `{` opener greedily eats a
+    // `{{ … }}` literal-brace run as a hole (`{{a}}` scanned as hole `{{a}`
+    // + a stray `}`) — the recorded showcase nit, now closed. An expression
+    // hole never starts with a bare `{` in practice (a record literal rides
+    // a leading space); an empty `{}` hole is not a weir hole either.
     interp_hole: _ =>
-      token.immediate(seq('{', repeat(choice(/[^}"]/, seq('"', /[^"]*/, '"'))), '}')),
+      token.immediate(
+        seq(
+          '{',
+          choice(/[^}"{]/, seq('"', /[^"]*/, '"')),
+          repeat(choice(/[^}"]/, seq('"', /[^"]*/, '"'))),
+          '}',
+        ),
+      ),
 
     // $@name / $@( — the argv splat
     splat: _ =>
