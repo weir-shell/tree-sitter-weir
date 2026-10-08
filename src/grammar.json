@@ -765,6 +765,10 @@
                 },
                 {
                   "type": "STRING",
+                  "value": "toml"
+                },
+                {
+                  "type": "STRING",
                   "value": "yaml"
                 },
                 {

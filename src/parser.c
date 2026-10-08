@@ -1026,6 +1026,7 @@ static bool ts_lex(TSLexer *lexer, TSStateId state) {
       END_STATE();
     case 11:
       if (lookahead == 'a') ADVANCE(13);
+      if (lookahead == 'o') ADVANCE(19);
       END_STATE();
     case 12:
       if (lookahead == 'a') ADVANCE(20);
