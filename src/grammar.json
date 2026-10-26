@@ -373,6 +373,10 @@
         },
         {
           "type": "STRING",
+          "value": "pfor"
+        },
+        {
+          "type": "STRING",
           "value": "do"
         },
         {
@@ -397,6 +401,10 @@
         },
         {
           "type": "STRING",
+          "value": "repeat"
+        },
+        {
+          "type": "STRING",
           "value": "until"
         },
         {
@@ -405,15 +413,15 @@
         },
         {
           "type": "STRING",
-          "value": "def"
-        },
-        {
-          "type": "STRING",
           "value": "return"
         },
         {
           "type": "STRING",
           "value": "try"
+        },
+        {
+          "type": "STRING",
+          "value": "orFail"
         },
         {
           "type": "STRING",
@@ -447,35 +455,53 @@
       ]
     },
     "string": {
-      "type": "TOKEN",
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "STRING",
-            "value": "\""
-          },
-          {
-            "type": "REPEAT",
-            "content": {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "PATTERN",
-                  "value": "[^\"\\\\]"
-                },
-                {
-                  "type": "PATTERN",
-                  "value": "\\\\."
-                }
-              ]
-            }
-          },
-          {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "\""
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "string_text"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "string_escape"
+              }
+            ]
+          }
+        },
+        {
+          "type": "IMMEDIATE_TOKEN",
+          "content": {
             "type": "STRING",
             "value": "\""
           }
-        ]
+        }
+      ]
+    },
+    "string_text": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[^\"\\\\]+"
+        }
+      }
+    },
+    "string_escape": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "\\\\(u\\{[0-9A-Fa-f]{1,6}\\}|.)"
       }
     },
     "raw_verbatim": {
@@ -589,6 +615,10 @@
           {
             "type": "STRING",
             "value": "}}"
+          },
+          {
+            "type": "PATTERN",
+            "value": "\\\\u\\{[0-9A-Fa-f]{1,6}\\}"
           },
           {
             "type": "PATTERN",
