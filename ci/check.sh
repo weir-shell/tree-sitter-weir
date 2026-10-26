@@ -29,7 +29,7 @@ def alt(rx, label):
     mm = re.search(rx, g)
     if not mm:
         print(f"FAIL: cannot find the {label} rule in grammar.js"); sys.exit(1)
-    return sorted(set(re.findall(r"[a-z]+", mm.group(1))))
+    return sorted(set(re.findall(r"[A-Za-z]+", mm.group(1))))
 
 wk = alt(r"within_kind: _ => choice\(([^)]+)\)", "within_kind")
 if wk != m["withinKinds"]:

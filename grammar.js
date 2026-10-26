@@ -103,17 +103,21 @@ module.exports = grammar({
         'from',
         'to',
         'for',
+        'pfor',
         'do',
         'module',
         'import',
         'within',
         'retry',
         'poll',
+        'repeat',
         'until',
         'always',
-        'def',
         'return',
         'try',
+        // the pipe-tail form `e |> orFail` / `e |> orFail "msg"` — the
+        // first camelCase keyword; the identifier token admits it
+        'orFail',
         'while',
         // the pure region head [D:pure-stage1] — a standalone kind,
         // never `within pure`, so it rides keywords not within_kind
@@ -128,8 +132,13 @@ module.exports = grammar({
 
     boolean: _ => choice('true', 'false'),
 
-    string: _ =>
-      token(seq('"', repeat(choice(/[^"\\]/, /\\./)), '"')),
+    // escapes [lexical]: \" \\ \n \t \e and \u{X..} — 1-6 hex digits,
+    // one token so the brace never reads as text
+    string: $ =>
+      seq('"', repeat(choice($.string_text, $.string_escape)), token.immediate('"')),
+
+    string_text: _ => token.immediate(prec(1, /[^"\\]+/)),
+    string_escape: _ => token.immediate(/\\(u\{[0-9A-Fa-f]{1,6}\}|.)/),
 
     // @"..." verbatim [D:raw-strings]: a backslash is an ORDINARY char (NOT
     // an escape — the regular-string `\\.` rule does not belong here), the
@@ -149,7 +158,9 @@ module.exports = grammar({
       ),
 
     interp_text: _ => token.immediate(prec(1, /[^"{}\\]+/)),
-    interp_escape: _ => token.immediate(choice('{{', '}}', /\\./)),
+    // `\u{…}` is ONE escape token: longest-match beats the two-char `\\.`
+    // so its `{` never opens a hole
+    interp_escape: _ => token.immediate(choice('{{', '}}', /\\u\{[0-9A-Fa-f]{1,6}\}/, /\\./)),
     // holes hold expressions, quoted strings included. The FIRST hole
     // atom must not be `{`: `{{` is the literal-brace escape (interp_escape
     // above), and without this guard the hole's `{` opener greedily eats a

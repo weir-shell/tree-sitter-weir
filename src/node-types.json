@@ -199,6 +199,25 @@
     }
   },
   {
+    "type": "string",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "string_escape",
+          "named": true
+        },
+        {
+          "type": "string_text",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "type_head",
     "named": true,
     "fields": {
@@ -381,10 +400,6 @@
     "named": true
   },
   {
-    "type": "def",
-    "named": false
-  },
-  {
     "type": "do",
     "named": false
   },
@@ -493,6 +508,14 @@
     "named": false
   },
   {
+    "type": "orFail",
+    "named": false
+  },
+  {
+    "type": "pfor",
+    "named": false
+  },
+  {
     "type": "plan",
     "named": false
   },
@@ -525,6 +548,10 @@
     "named": false
   },
   {
+    "type": "repeat",
+    "named": false
+  },
+  {
     "type": "retry",
     "named": false
   },
@@ -553,7 +580,11 @@
     "named": true
   },
   {
-    "type": "string",
+    "type": "string_escape",
+    "named": true
+  },
+  {
+    "type": "string_text",
     "named": true
   },
   {
